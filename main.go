@@ -11,6 +11,7 @@ func main() {
 	godotenv.Load(".env")
 
 	app := fiber.New()
+	router.SwaggerRouter(app)
 	router.PublicRoutes(app)
 	router.NotFoundRoute(app)
 	app.Listen(":9090")
