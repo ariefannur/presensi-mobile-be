@@ -1,4 +1,21 @@
+definitions:
+  models.Version:
+    properties:
+      code:
+        type: integer
+      name:
+        type: string
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /version:
+    get:
+      description: get version app of api
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Version'
+      summary: get app version
 swagger: "2.0"

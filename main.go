@@ -14,5 +14,6 @@ func main() {
 	router.SwaggerRouter(app)
 	router.PublicRoutes(app)
 	router.NotFoundRoute(app)
+
 	app.Listen(":9090")
 }
