@@ -1,14 +1,16 @@
 ### Presensi Mobile Api
 
-#### Docker 
+#### Makefile 
 ```
-docker run --rm -d \
-    --name dev-postgres \
-    --network presensi-mobile\
-    -e POSTGRES_USER=admin \
-    -e POSTGRES_PASSWORD=password \
-    -e POSTGRES_DB=presensi_db \
-    -v ${HOME}/dev-postgres/data/:/var/lib/postgresql/data \
-    -p 5432:5432 \
-    postgres
-    ```
+// create postgres
+make postgres
+// create db
+make createdb
+// migrate up
+make migrateup
+// migrate down
+make migratedown
+```
+
+#### Database Diagram
+![ERD](/Presensi%20Diagram.png)
