@@ -17,5 +17,7 @@ func PrivateRoutes(a *fiber.App) {
 
 	route.Post("/login", controller.Login)
 	route.Post("/lgout", controller.Logout)
+
 	route.Post("/add-presensi", controller.CreatePresensi)
+	route.Get("/presensi/:user_id?", controller.GetPresensiByUserId)
 }

@@ -11,13 +11,21 @@ type SessionQueries struct {
 }
 
 func (q *SessionQueries) CreateSession(userId string, token string, device string) error {
-	// get first
-	// if any data update data
-	query := `INSERT INTO "Sessions" (user_id, token, device, status) VALUES ($1, $2, $3, 'ONLINE)`
-	_, err := q.Exec(query, userId, token, device)
-
-	if err != nil {
-		return err
+	getQuery := `SELECT * FROM "Sessions" WHERE user_id = $1`
+	session := models.Session{}
+	errGet := q.Get(&session, getQuery, userId)
+	if errGet != nil {
+		query := `INSERT INTO "Sessions" (user_id, token, device, status) VALUES ($1, $2, $3, 'ONLINE)`
+		_, err := q.Exec(query, userId, token, device)
+		if err != nil {
+			return err
+		}
+	} else {
+		query := `UPDATE "Sessions" SET token = $1, device = $2 WHERE user_id = $3`
+		_, err := q.Exec(query, token, device, userId)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

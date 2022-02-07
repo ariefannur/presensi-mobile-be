@@ -90,6 +90,22 @@ func Logout(c *fiber.Ctx) error {
 }
 
 func RefreshToken(c *fiber.Ctx) error {
+
+	authMap := utils.CheckValidToken(c)
+
+	if authMap != nil {
+		if authMap["code"] == 401 {
+			return doRefresh(c)
+		} else {
+			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
+		}
+	}
+
+	return doRefresh(c)
+
+}
+
+func doRefresh(c *fiber.Ctx) error {
 	db, err := database.OpenDBConnection()
 
 	if err != nil {
@@ -118,5 +134,4 @@ func RefreshToken(c *fiber.Ctx) error {
 			"message": "Refresh token success",
 		})
 	}
-
 }

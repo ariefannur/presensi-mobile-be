@@ -3,8 +3,6 @@ package controller
 import (
 	"encoding/csv"
 	"fmt"
-	"io/ioutil"
-	"mime/multipart"
 	"os"
 	"presensi-mobile/database"
 	"presensi-mobile/models"
@@ -104,7 +102,7 @@ func InserCSVFileUsers(c *fiber.Ctx) error {
 				"message": err.Error(),
 			})
 		} else {
-			file, err := moveTmpFile(file)
+			file, err := utils.MoveTmpFile(file, utils.File_Path, utils.GetFormatFileName("csv"))
 
 			if err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -123,26 +121,6 @@ func InserCSVFileUsers(c *fiber.Ctx) error {
 			})
 		}
 	}
-}
-
-func moveTmpFile(file *multipart.FileHeader) (*os.File, error) {
-	tempFile, err := ioutil.TempFile("tmp", "file_*.csv")
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	defer tempFile.Close()
-	// write this byte array to our temporary file
-
-	dataFile, err := file.Open()
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-
-	byteContainer, err := ioutil.ReadAll(dataFile)
-	tempFile.Write(byteContainer)
-	return tempFile, nil
 }
 
 func openCSVFile(file *os.File) []*models.Users {
