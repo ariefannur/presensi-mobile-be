@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"presensi-mobile/pkg/router"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,6 +15,6 @@ func main() {
 	router.SwaggerRouter(app)
 	router.PublicRoutes(app)
 	router.NotFoundRoute(app)
-
+	fmt.Println("START")
 	app.Listen(":9090")
 }

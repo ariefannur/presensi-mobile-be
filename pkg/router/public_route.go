@@ -10,5 +10,5 @@ import (
 func PublicRoutes(a *fiber.App) {
 	route := a.Group(os.Getenv("GROUP_PATH"))
 	route.Get("/version", controller.GetVersion)
-	route.Post("/add-users", controller.InsertUser)
+
 }
