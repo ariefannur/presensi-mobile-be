@@ -1,4 +1,19 @@
 definitions:
+  models.Session:
+    properties:
+      device:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      time:
+        type: string
+      token:
+        type: string
+      user_id:
+        type: integer
+    type: object
   models.Version:
     properties:
       code:
@@ -9,6 +24,42 @@ definitions:
 info:
   contact: {}
 paths:
+  /login:
+    post:
+      description: to login and create token
+      parameters:
+      - description: email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Session'
+      summary: Login to api
+  /logout:
+    post:
+      description: to logout clear session
+      parameters:
+      - description: user_id
+        in: body
+        name: user_id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: ""
+      summary: Logout clear session
   /version:
     get:
       description: get version app of api

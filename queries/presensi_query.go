@@ -12,7 +12,7 @@ type PresensiQueries struct {
 
 func (p *PresensiQueries) CreatePresensi(pp *models.Presensi) error {
 	query := `INSERT INTO "Presensi" (user_id, foto, lat, lng, alamat) VALUES($1, $2, $3, $4, $5)`
-	_, err := p.Exec(query, pp.UserID, pp.Foto, pp.Lat, pp.Lng, pp.Alamat)
+	_, err := p.Exec(query, pp.User_Id, pp.Foto, pp.Lat, pp.Lng, pp.Alamat)
 	if err != nil {
 		return err
 	}

@@ -14,6 +14,7 @@ func main() {
 	app := fiber.New()
 	router.SwaggerRouter(app)
 	router.PublicRoutes(app)
+	router.PrivateRoutes(app)
 	router.NotFoundRoute(app)
 	fmt.Println("START")
 	app.Listen(":9090")

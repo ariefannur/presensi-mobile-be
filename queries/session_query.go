@@ -1,6 +1,7 @@
 package queries
 
 import (
+	"fmt"
 	"presensi-mobile/models"
 
 	"github.com/jmoiron/sqlx"
@@ -14,14 +15,17 @@ func (q *SessionQueries) CreateSession(userId string, token string, device strin
 	getQuery := `SELECT * FROM "Sessions" WHERE user_id = $1`
 	session := models.Session{}
 	errGet := q.Get(&session, getQuery, userId)
+	fmt.Println(fmt.Sprintf("err get session %s", errGet))
 	if errGet != nil {
-		query := `INSERT INTO "Sessions" (user_id, token, device, status) VALUES ($1, $2, $3, 'ONLINE)`
+		fmt.Println("insert session")
+		query := `INSERT INTO "Sessions" (user_id, token, device, status) VALUES ($1, $2, $3, 'ONLINE')`
 		_, err := q.Exec(query, userId, token, device)
 		if err != nil {
 			return err
 		}
 	} else {
-		query := `UPDATE "Sessions" SET token = $1, device = $2 WHERE user_id = $3`
+		fmt.Println("update session")
+		query := `UPDATE "Sessions" SET token = $1, device = $2, status = 'ONLINE' WHERE user_id = $3`
 		_, err := q.Exec(query, token, device, userId)
 		if err != nil {
 			return err
@@ -42,8 +46,10 @@ func (q *SessionQueries) Logout(userId string) error {
 
 func (q *SessionQueries) GetSession(userId string) (models.Session, error) {
 	query := `SELECT * FROM "Sessions" WHERE user_id = $1`
+
 	session := models.Session{}
-	err := q.Get(&session, query, userId)
+	err := q.QueryRow(query, userId).Scan(&session.ID, &session.User_ID, &session.Token, &session.Time, &session.Device, &session.Status)
+	fmt.Println(err)
 	if err != nil {
 		return session, err
 	}

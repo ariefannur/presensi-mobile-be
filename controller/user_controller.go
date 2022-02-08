@@ -18,7 +18,7 @@ func InsertUser(c *fiber.Ctx) error {
 		if authMap["code"] == 500 {
 			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
 		} else {
-			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
+			return c.Status(fiber.StatusUnauthorized).JSON(authMap)
 		}
 
 	}
@@ -80,7 +80,7 @@ func InserCSVFileUsers(c *fiber.Ctx) error {
 		if authMap["code"] == 500 {
 			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
 		} else {
-			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
+			return c.Status(fiber.StatusUnauthorized).JSON(authMap)
 		}
 
 	}
@@ -160,7 +160,7 @@ func GetUsers(c *fiber.Ctx) error {
 		if authMap["code"] == 500 {
 			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
 		} else {
-			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
+			return c.Status(fiber.StatusUnauthorized).JSON(authMap)
 		}
 
 	}
@@ -211,9 +211,8 @@ func ChangePassword(c *fiber.Ctx) error {
 		if authMap["code"] == 500 {
 			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
 		} else {
-			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
+			return c.Status(fiber.StatusUnauthorized).JSON(authMap)
 		}
-
 	}
 
 	db, err := database.OpenDBConnection()
@@ -225,22 +224,10 @@ func ChangePassword(c *fiber.Ctx) error {
 		})
 
 	} else {
-		user := new(models.Users)
+		email := c.FormValue("email")
+		password := c.FormValue("password")
 
-		if err := c.BodyParser(user); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"code":    404,
-				"message": err.Error(),
-			})
-		}
-
-		if err := user.IsValid(); err != nil {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"code":    404,
-				"message": err,
-			})
-		}
-		_, err := db.ChangePassword(user.Password, user.Email)
+		err := db.ChangePassword(password, email)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"code":    404,

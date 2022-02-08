@@ -65,14 +65,13 @@ func (q *UserQueries) Login(email string, password string) (models.Users, error)
 	return user, nil
 }
 
-func (q *UserQueries) ChangePassword(newPassword string, email string) (models.Users, error) {
+func (q *UserQueries) ChangePassword(newPassword string, email string) error {
 	query := `UPDATE "Users" SET password = $1 WHERE email = $2`
-	user := models.Users{}
-	err := q.QueryRow(query, GetMD5Hash(newPassword), email).Scan(&user.Id, &user.Name, &user.Email, &user.Password, &user.User_Type)
-
+	_, err := q.Exec(query, GetMD5Hash(newPassword), email)
+	fmt.Println(err)
 	if err != nil {
-		return user, err
+		return err
 	}
 
-	return user, nil
+	return nil
 }

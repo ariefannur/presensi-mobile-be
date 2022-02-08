@@ -48,7 +48,7 @@ func CreatePresensi(c *fiber.Ctx) error {
 		})
 	}
 
-	userId := strconv.FormatInt(presensi.UserID, 10)
+	userId := strconv.FormatInt(presensi.User_Id, 10)
 	fileTmp, errFile := utils.MoveTmpFile(file, utils.Photo_Path, utils.GetFormatPhotoName(userId))
 
 	if errFile != nil {
@@ -78,7 +78,6 @@ func GetPresensiByUserId(c *fiber.Ctx) error {
 		}
 	}
 
-	var presensi models.Presensi
 	userId := c.Params("user_id")
 
 	db, err := database.OpenDBConnection()
@@ -89,10 +88,14 @@ func GetPresensiByUserId(c *fiber.Ctx) error {
 		})
 	}
 
-	if _, err := db.GetPresensi(userId); err != nil {
+	presensi, err := db.GetPresensi(userId)
+	if err != nil {
 		return c.Status(500).SendString("Error: " + err.Error())
 	}
 
-	return c.JSON(presensi)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"code": 200,
+		"data": presensi,
+	})
 
 }

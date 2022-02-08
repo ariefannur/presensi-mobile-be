@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"os"
 	"strings"
 	"time"
@@ -23,6 +22,7 @@ func ExtractTokenMetadata(c *fiber.Ctx) (*TokenMetaData, error) {
 
 	// Setting and checking token and credentials.
 	claims, ok := token.Claims.(jwt.MapClaims)
+
 	if ok && token.Valid {
 		// Expires time.
 		expires := int64(claims["exp"].(float64))
@@ -59,7 +59,7 @@ func verifyToken(c *fiber.Ctx) (*jwt.Token, error) {
 }
 
 func jwtKeyFunc(token *jwt.Token) (interface{}, error) {
-	return []byte(os.Getenv("JWT_SECRET_KEY")), nil
+	return []byte(os.Getenv("JWT_SECRET")), nil
 }
 
 func CheckValidToken(c *fiber.Ctx) fiber.Map {
@@ -68,7 +68,7 @@ func CheckValidToken(c *fiber.Ctx) fiber.Map {
 
 	// Get claims from JWT.
 	claims, err := ExtractTokenMetadata(c)
-	fmt.Println(err)
+
 	if err != nil {
 		// Return status 500 and JWT parse error.
 		return fiber.Map{
