@@ -100,7 +100,7 @@ func RefreshToken(c *fiber.Ctx) error {
 	authMap := utils.CheckValidToken(c)
 
 	if authMap != nil {
-		if authMap["code"] == 401 {
+		if authMap["code"] == 401 || authMap["code"] == 500 {
 			return doRefresh(c)
 		} else {
 			return c.Status(fiber.StatusInternalServerError).JSON(authMap)
@@ -138,6 +138,7 @@ func doRefresh(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"code":    200,
 			"message": "Refresh token success",
+			"token":   token,
 		})
 	}
 }

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"presensi-mobile/database"
 	"presensi-mobile/models"
 	"presensi-mobile/pkg/utils"
@@ -47,23 +48,37 @@ func CreatePresensi(c *fiber.Ctx) error {
 			"message": err.Error(),
 		})
 	}
-
 	userId := strconv.FormatInt(presensi.User_Id, 10)
-	fileTmp, errFile := utils.MoveTmpFile(file, utils.Photo_Path, utils.GetFormatPhotoName(userId))
 
-	if errFile != nil {
+	// check presensi today
+	dataPresensi, err := db.CheckPrensensiToday(userId)
+	fmt.Println(err)
+	if dataPresensi.ID != 0 && err == nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"code":    404,
-			"message": err.Error(),
+			"message": "User sudah melakukan presensi hari ini",
+		})
+	} else {
+
+		fileTmp, errFile := utils.MoveTmpFile(file, utils.Photo_Path, utils.GetFormatPhotoName(userId))
+
+		if errFile != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"code":    404,
+				"message": err.Error(),
+			})
+		}
+		presensi.Foto = fileTmp.Name()[9:len(fileTmp.Name())]
+
+		if err := db.CreatePresensi(&presensi); err != nil {
+			return c.Status(500).SendString("Error: " + err.Error())
+		}
+
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"code":    200,
+			"message": "Success",
 		})
 	}
-	presensi.Foto = fileTmp.Name()
-
-	if err := db.CreatePresensi(&presensi); err != nil {
-		return c.Status(500).SendString("Error: " + err.Error())
-	}
-
-	return c.Status(200).SendString("Success")
 
 }
 

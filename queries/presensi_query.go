@@ -1,6 +1,7 @@
 package queries
 
 import (
+	"fmt"
 	"presensi-mobile/models"
 
 	"github.com/jmoiron/sqlx"
@@ -26,5 +27,16 @@ func (p *PresensiQueries) GetPresensi(userId string) ([]models.Presensi, error) 
 	if err != nil {
 		return presensi, err
 	}
+	return presensi, nil
+}
+
+func (p *PresensiQueries) CheckPrensensiToday(userId string) (models.Presensi, error) {
+	query := `SELECT * FROM "Presensi" WHERE time::date = current_date AND user_id = $1 LIMIT 1`
+	presensi := models.Presensi{}
+	err := p.QueryRow(query, userId).Scan(&presensi.ID, &presensi.User_Id, &presensi.Foto, &presensi.Time, &presensi.Lat, &presensi.Lng, &presensi.Alamat)
+	if err != nil {
+		return presensi, err
+	}
+	fmt.Println(presensi)
 	return presensi, nil
 }

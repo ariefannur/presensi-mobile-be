@@ -15,7 +15,7 @@ func (q *SessionQueries) CreateSession(userId string, token string, device strin
 	getQuery := `SELECT * FROM "Sessions" WHERE user_id = $1`
 	session := models.Session{}
 	errGet := q.Get(&session, getQuery, userId)
-	fmt.Println(fmt.Sprintf("err get session %s", errGet))
+
 	if errGet != nil {
 		fmt.Println("insert session")
 		query := `INSERT INTO "Sessions" (user_id, token, device, status) VALUES ($1, $2, $3, 'ONLINE')`
