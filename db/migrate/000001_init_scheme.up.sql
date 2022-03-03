@@ -3,7 +3,7 @@ CREATE TABLE "Users" (
   "id" bigserial PRIMARY KEY,
   "name" varchar NOT NULL,
   "email" varchar NOT NULL,
-  "pasword" varchar NOT NULL,
+  "password" varchar NOT NULL,
   "user_type" varchar NOT NULL
 );
 

@@ -6,7 +6,7 @@ CREATE TABLE "Sessions" (
   "device" varchar NOT NULL,
   "status" varchar,
   FOREIGN KEY ("user_id") REFERENCES "Users" ("id"),
-  PRIMARY KEY ("id", "user_id"),
+  PRIMARY KEY ("id", "user_id")
 
 );
 

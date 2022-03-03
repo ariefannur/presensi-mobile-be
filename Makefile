@@ -1,7 +1,7 @@
 include .env
 
 postgres:
-	 docker run --name mypostgres -p 5432:5432 -e POSTGRES_PASSWORD=${DB_PASSWORD} -e POSTGRES_USER=${DB_USER} -d postgres:12-alpine
+	 docker run --name mypostgres --network presensi-network -p 5432:5432 -e POSTGRES_PASSWORD=${DB_PASSWORD} -e POSTGRES_USER=${DB_USER} -d postgres:12-alpine
 createdb: 
 	docker exec -it mypostgres createdb --username=${DB_USER} --owner=${DB_USER} ${DB_NAME}
 newmigate:
