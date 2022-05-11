@@ -2,9 +2,10 @@
 
 #### Docker
 ```
+// for run all env and start service
 docker compose up
-
-docker compose down
+// for delete stop docker container
+docker compose down 
 ```
 
 #### Makefile 
