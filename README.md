@@ -1,5 +1,12 @@
 ### Presensi Mobile Api
 
+#### Docker
+```
+docker compose up
+
+docker compose down
+```
+
 #### Makefile 
 ```
 // create postgres
